@@ -1,7 +1,8 @@
 import puzzle
 
 if __name__ == '__main__':
-    p = puzzle.Puzzle()
     filename = input("Enter your desired filename: ")
+    p = puzzle.Puzzle(0, 0, [])
     p.fileInput(filename)
-    print(p.getMatrix())
+    p.printMatrix()
+    print(puzzle.isReachable(p.matrix))
