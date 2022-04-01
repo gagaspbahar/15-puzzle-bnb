@@ -5,4 +5,8 @@ if __name__ == '__main__':
     p = puzzle.Puzzle(0, 0, [])
     p.fileInput(filename)
     p.printMatrix()
-    print(puzzle.isReachable(p.matrix))
+    reach = puzzle.isReachable(p.matrix)
+
+    if(not reach):
+        print("The puzzle is not solvable.")
+    

@@ -98,6 +98,18 @@ class Puzzle:
         print(self.matrix[i][j], end=" ")
       print()
 
+  def cost(self):
+    # using manhattan distance
+    ans = 0
+    for i in range(4):
+      for j in range(4):
+        num = getAbsolute(i,j)
+        temp = getPosition(self.matrix, num)
+        i1 = temp[0]
+        j1 = temp[1]
+        ans += abs(i1-i) + abs(j1-j)
+    return ans
+
 def findX(matrix):
   for i in range(4):
     for j in range(4):
