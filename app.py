@@ -1,10 +1,19 @@
 from puzzle import *
 
 if __name__ == '__main__':
-    filename = input("Enter your desired filename: ")
-    startingMatrix = fileInput(filename)
-    # p = PuzzleNode(0,0,startingMatrix)
-    # p.calcCost()
-    # p.printMatrix()
+    print("Choose your input option: ")
+    print("1. File input")
+    print("2. Console input")
+    option = int(input())
+    if(option == 1):
+        filename = input("Enter your desired filename: ")
+        startingMatrix = fileInput(filename)
+    elif(option == 2):
+        print("Enter your 4x4 matrix (valid values only 0 to 15): ")
+        startingMatrix = consoleInput()
+    else:
+        print("Invalid input.")
+        quit()
+    print(startingMatrix)
     solve(startingMatrix)
     

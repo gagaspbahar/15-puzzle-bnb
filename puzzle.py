@@ -151,6 +151,9 @@ def fileInput(filename):
         matrix[i][j] = 0
   return matrix
 
+def consoleInput():
+  matrix = [list(map(int, input().split(" "))) for j in range(4)]
+  return matrix
 
 
 def findX(matrix):
