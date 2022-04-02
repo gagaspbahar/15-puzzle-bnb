@@ -89,10 +89,7 @@ class PuzzleNode:
 
 
   def printMatrix(self):
-    for i in range(len(self.matrix)):
-      for j in range(len(self.matrix[i])):
-        print(self.matrix[i][j], end=" ")
-      print()
+    print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.matrix]))
 
   def calcCost(self):
     # using manhattan distance
@@ -235,7 +232,23 @@ def solve(initialMatrix):
           hq.heappush(queue, child)
           nodeCount += 1
     done = time.time()
-    print("Number of nodes generated: ", nodeCount)
-    print("Explored nodes: ", exploredNodeCount)
-    print("Time taken:", str(done-now) + "s")
+    printSolution(initialMatrix, ans)
+    print("Number of nodes generated:", nodeCount)
+    print("Explored nodes:", exploredNodeCount)
+    print("Time taken:", str(done-now), "s")
     print("Solution:", ans)
+
+def printSolution(initialMatrix, moves):
+  matrix = PuzzleNode(0, 0, initialMatrix)
+  for move in moves:
+    print("Step:", move)
+    if(move == "up"):
+      matrix.moveUp()
+    elif(move == "down"):
+      matrix.moveDown()
+    elif(move == "left"):
+      matrix.moveLeft()
+    elif(move == "right"):
+      matrix.moveRight()
+    matrix.printMatrix()
+    print("=================")
