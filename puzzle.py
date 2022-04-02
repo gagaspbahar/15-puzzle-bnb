@@ -1,14 +1,15 @@
-class Tree:
-  def __init__(self):
-    self
+import copy
+import heapq as hq
+import time
 
-class Puzzle:
+class PuzzleNode:
   test_dir = "test/"
-  matrix = []
 
   def __init__(self, level, cost, matrix):
     self.level = level
     self.matrix = matrix
+    self.cost = cost
+    self.moves = []
   
   def getMatrix(self):
     return self.matrix
@@ -19,21 +20,14 @@ class Puzzle:
   def getCost(self):
     return self.cost
 
-  def fileInput(self, filename):
-    self.matrix = []
-    try:
-      file = open(Puzzle.test_dir + filename, "r")
-    except:
-      print("No file with the desired name found.")
-    for line in file:
-      line = line.strip()
-      self.matrix.append(line.split(" "))
-    for i in range(len(self.matrix)):
-      for j in range(len(self.matrix[i])):
-        self.matrix[i][j] = int(self.matrix[i][j])
-        if(self.matrix[i][j] == 16):
-          self.matrix[i][j] = 0
-    return self.matrix
+  def getFunction(self):
+    return self.level + self.cost
+
+  def getMoves(self):
+    return self.moves
+  
+  def appendMoves(self, direction):
+    self.moves.append(direction)
 
   def moveUp(self):
     for i in range(len(self.matrix)):
@@ -92,23 +86,75 @@ class Puzzle:
       print("Invalid direction.")
     return status
 
+
+
   def printMatrix(self):
     for i in range(len(self.matrix)):
       for j in range(len(self.matrix[i])):
         print(self.matrix[i][j], end=" ")
       print()
 
-  def cost(self):
+  def calcCost(self):
     # using manhattan distance
     ans = 0
     for i in range(4):
       for j in range(4):
-        num = getAbsolute(i,j)
+        num = getAbsolute(i,j) + 1
+        if(num == 16):
+          num = 0
         temp = getPosition(self.matrix, num)
         i1 = temp[0]
         j1 = temp[1]
         ans += abs(i1-i) + abs(j1-j)
-    return ans
+    self.cost = ans
+
+    #0 0
+    #num = 0
+    #temp = 3,2
+    #5
+
+    #0 1
+    #num = 1
+    # temp = 0, 0
+  
+  def incrementLevel(self):
+    self.level += 1
+
+  def getChild(self):
+    direction = ["up", "down", "left", "right"]
+    children = []
+    for i in range(4):
+      temp = copy.deepcopy(self)
+      status = temp.move(direction[i])
+      if(status == 0):
+        temp.incrementLevel()
+        temp.calcCost()
+        temp.appendMoves(direction[i])
+        children.append(temp)
+    return children
+  
+  def __lt__(self, other):
+    return self.getFunction() <= other.getFunction()
+
+
+
+def fileInput(filename):
+  matrix = []
+  try:
+    file = open(PuzzleNode.test_dir + filename, "r")
+  except:
+    print("No file with the desired name found.")
+  for line in file:
+    line = line.strip()
+    matrix.append(line.split(" "))
+  for i in range(len(matrix)):
+    for j in range(len(matrix[i])):
+      matrix[i][j] = int(matrix[i][j])
+      if(matrix[i][j] == 16):
+        matrix[i][j] = 0
+  return matrix
+
+
 
 def findX(matrix):
   for i in range(4):
@@ -132,6 +178,7 @@ def findKurang(matrix):
   # Banyaknya ubin bernomor j sedemikian sehingga j < i dan POSISI(j) > POSISI(i)
   kurang = 0
   for n in range(16):
+    currentKurang = 0
     for i in range(4):
       for j in range(4):
         # n itu i
@@ -147,9 +194,48 @@ def findKurang(matrix):
         m = 16 if m == 0 else m
         if((m < check) and (getAbsolute(checkMI, checkMJ) > getAbsolute(checkI, checkJ))):
           kurang += 1
-    print(n, kurang)
+          currentKurang += 1
+    print("kurang(" + str(n) + "):", currentKurang)
   return kurang
 
+def reach(matrix):
+  reachConst = findKurang(matrix) + findX(matrix)
+  return reachConst
+  
 def isReachable(matrix):
-  reach = findKurang(matrix) + findX(matrix)
-  return reach % 2 == 0
+  reachConst = reach(matrix)
+  print("Reach constant is:", str(reachConst))
+  if(reachConst % 2 == 1):
+    print("The puzzle is not solvable.")
+    return False
+  else:
+    return True
+
+def solve(initialMatrix):
+  if(isReachable(initialMatrix)):
+    initialNode = PuzzleNode(0, 0, initialMatrix)
+    initialNode.calcCost()
+    queue = []
+    hq.heapify(queue)
+    hq.heappush(queue, initialNode)
+    explored = []
+    nodeCount = 0
+    exploredNodeCount = 0
+    now = time.time()
+    while(queue):
+      currentNode = hq.heappop(queue)
+      if(currentNode.getCost() == 0):
+        ans = currentNode.getMoves()
+        break
+      explored.append(currentNode)
+      exploredNodeCount += 1
+      children = currentNode.getChild()
+      for child in children:
+        if(child not in explored):
+          hq.heappush(queue, child)
+          nodeCount += 1
+    done = time.time()
+    print("Number of nodes generated: ", nodeCount)
+    print("Explored nodes: ", exploredNodeCount)
+    print("Time taken:", str(done-now) + "s")
+    print("Solution:", ans)
