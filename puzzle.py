@@ -231,9 +231,8 @@ def solve(initialMatrix):
       exploredNodeCount += 1
       children = currentNode.getChild()
       for child in children:
-        if(child not in explored):
-          hq.heappush(queue, child)
-          nodeCount += 1
+        hq.heappush(queue, child)
+        nodeCount += 1
     done = time.time()
     printSolution(initialMatrix, ans)
     print("Number of nodes generated:", nodeCount)
