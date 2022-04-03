@@ -1,6 +1,15 @@
 from puzzle import *
 
 if __name__ == '__main__':
+    print('''
+  __   _____     _____                        _        
+ /_ | | ____|   |  __ \                      | |       
+  | | | |__     | |__) |  _   _   ____  ____ | |   ___ 
+  | | |___ \    |  ___/  | | | | |_  / |_  / | |  / _ \\
+  | |  ___) |   | |      | |_| |  / /   / /  | | |  __/
+  |_| |____/    |_|       \__,_| /___| /___| |_|  \___|
+                                                       
+                                                       ''')
     print("Choose your input option: ")
     print("1. File input")
     print("2. Console input")
@@ -14,5 +23,8 @@ if __name__ == '__main__':
     else:
         print("Invalid input.")
         quit()
+    print("INITIAL MATRIX: ")
+    printMatrix(startingMatrix)
+    print("=================")
     solve(startingMatrix)
     

@@ -88,8 +88,6 @@ class PuzzleNode:
 
 
 
-  def printMatrix(self):
-    print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.matrix]))
 
   def calcCost(self):
     # using manhattan distance
@@ -104,15 +102,6 @@ class PuzzleNode:
         j1 = temp[1]
         ans += abs(i1-i) + abs(j1-j)
     self.cost = ans
-
-    #0 0
-    #num = 0
-    #temp = 3,2
-    #5
-
-    #0 1
-    #num = 1
-    # temp = 0, 0
   
   def incrementLevel(self):
     self.level += 1
@@ -133,6 +122,8 @@ class PuzzleNode:
   def __lt__(self, other):
     return self.getFunction() <= other.getFunction()
 
+def printMatrix(matrix):
+  print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in matrix]))
 
 
 def fileInput(filename):
@@ -141,6 +132,7 @@ def fileInput(filename):
     file = open(PuzzleNode.test_dir + filename, "r")
   except:
     print("No file with the desired name found.")
+    quit()
   for line in file:
     line = line.strip()
     matrix.append(line.split(" "))
@@ -239,6 +231,7 @@ def solve(initialMatrix):
     print("Explored nodes:", exploredNodeCount)
     print("Time taken:", str(done-now), "s")
     print("Solution:", ans)
+    print("Number of steps:", len(ans))
 
 def printSolution(initialMatrix, moves):
   matrix = PuzzleNode(0, 0, initialMatrix)
@@ -252,5 +245,5 @@ def printSolution(initialMatrix, moves):
       matrix.moveLeft()
     elif(move == "right"):
       matrix.moveRight()
-    matrix.printMatrix()
+    printMatrix(matrix.getMatrix())
     print("=================")
