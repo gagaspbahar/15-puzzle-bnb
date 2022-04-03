@@ -1,4 +1,4 @@
-from puzzle import *
+from lib.puzzle import *
 
 if __name__ == '__main__':
     print('''
@@ -27,4 +27,3 @@ if __name__ == '__main__':
     printMatrix(startingMatrix)
     print("=================")
     solve(startingMatrix)
-    

@@ -86,9 +86,6 @@ class PuzzleNode:
       print("Invalid direction.")
     return status
 
-
-
-
   def calcCost(self):
     # using manhattan distance
     ans = 0
